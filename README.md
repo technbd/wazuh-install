@@ -291,6 +291,23 @@ systemctl status wazuh-agent
 ```
 
 
+#### Recommended action - Disable Wazuh updates:
+
+_For Centos:_
+```
+sed -i "s/^enabled=1/enabled=0/" /etc/yum.repos.d/wazuh.repo
+```
+
+
+_For Ubuntu::_
+```
+sed -i "s/^deb/#deb/" /etc/apt/sources.list.d/wazuh.list
+apt update
+```
+
+
+
+
 ### Add Windows Agent:
 
 1. Go to `Dashboard` - `Server management` - `Endpoints summary` - click `Deploy new agent`: 
@@ -307,18 +324,44 @@ NET STOP WazuhSvc
 
 
 
-#### Recommended action - Disable Wazuh updates:
+### File integrity monitoring:
 
-_For Centos:_
-```
-sed -i "s/^enabled=1/enabled=0/" /etc/yum.repos.d/wazuh.repo
-```
+#### Ubuntu endpoint:
 
 
-_For Ubuntu::_
+#### Windows endpoint:
+
+Take the following steps to configure the Wazuh agent to monitor filesystem changes in the `C:\Users\Administrator\Desktop` or `C:\Users\*\Documents` directory.
+
+Edit the `C:\Program Files (x86)\ossec-agent\ossec.conf` configuration file on the monitored Windows endpoint. Add the directories for monitoring within the `<syscheck>` block. 
+
 ```
-sed -i "s/^deb/#deb/" /etc/apt/sources.list.d/wazuh.list
-apt update
+  <!-- File integrity monitoring -->
+  <syscheck>
+    <disabled>no</disabled>
+
+    <!-- Frequency that syscheck is executed default every 12 hours -->
+    <frequency>43200</frequency>
+
+    <!-- Default files to be monitored. -->
+    <!-- ... -->
+    <!-- ... -->
+
+    <directories realtime="yes">%PROGRAMDATA%\Microsoft\Windows\Start Menu\Programs\Startup</directories>
+
+
+    <directories check_all="yes" report_changes="yes" realtime="yes">C:\Users\*\Documents</directories>
+    <directories check_all="yes" report_changes="yes" realtime="yes">C:\Users\*\Desktop</directories>
+
+
+    <ignore>%PROGRAMDATA%\Microsoft\Windows\Start Menu\Programs\Startup\desktop.ini</ignore>
+
+    <ignore type="sregex">.log$|.htm$|.jpg$|.png$|.chm$|.pnf$|.evtx$</ignore>
+
+    <!-- ... -->
+    <!-- ... -->
+  </syscheck>
+
 ```
 
 
