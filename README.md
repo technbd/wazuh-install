@@ -325,8 +325,50 @@ NET STOP WazuhSvc
 
 
 ### File integrity monitoring:
+File Integrity Monitoring (FIM) helps in auditing sensitive files and meeting regulatory compliance requirements. Wazuh has an inbuilt FIM module that monitors file system changes to detect the creation, modification, and deletion of files.
+
 
 #### Ubuntu endpoint:
+Perform the following steps to configure the Wazuh agent to monitor filesystem changes in the `/root` directory.
+
+Edit the Wazuh agent `/var/ossec/etc/ossec.conf` configuration file. Add the directories for monitoring within the `<syscheck>` block.
+
+```
+  <!-- File integrity monitoring -->
+  <syscheck>
+    <disabled>no</disabled>
+
+    <!-- Frequency that syscheck is executed default every 12 hours -->
+    <frequency>43200</frequency>
+
+     <scan_on_start>yes</scan_on_start>
+
+     <!-- Directories to check  (perform all possible verifications) -->
+    <directories>/etc,/usr/bin,/usr/sbin</directories>
+    <directories>/bin,/sbin,/boot</directories>
+
+
+    <directories check_all="yes" report_changes="yes" realtime="yes">/root</directories>
+
+    <!-- ... -->
+    <!-- ... -->
+
+    <!-- File types to ignore -->
+    <ignore type="sregex">.log$|.swp$</ignore>
+
+    <!-- ... -->
+    <!-- ... -->
+
+
+  </syscheck>
+
+```
+
+
+```
+systemctl restart wazuh-agent
+```
+
 
 
 #### Windows endpoint:
