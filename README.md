@@ -285,10 +285,26 @@ cat /var/ossec/etc/ossec.conf | grep 192.168.10.192
 ```
 systemctl daemon-reload
 systemctl enable wazuh-agent
-
 systemctl start wazuh-agent
+
 systemctl status wazuh-agent
 ```
+
+
+### Add Windows Agent:
+
+1. Go to `Dashboard` - `Server management` - `Endpoints summary` - click `Deploy new agent`: 
+
+```
+Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-4.9.2-1.msi -OutFile $env:tmp\wazuh-agent; msiexec.exe /i $env:tmp\wazuh-agent /q WAZUH_MANAGER='192.168.10.193' WAZUH_AGENT_NAME='windows10-44' 
+```
+
+
+```
+NET START WazuhSvc
+NET STOP WazuhSvc
+```
+
 
 
 #### Recommended action - Disable Wazuh updates:
