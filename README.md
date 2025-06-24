@@ -220,17 +220,15 @@ Now that your Wazuh installation is ready, you can start deploying the Wazuh age
 - Cloud security
 
 
-
+### For RHEL/CentOS Based:
 
 _Import the GPG key:_
-
 ```
 rpm --import https://packages.wazuh.com/key/GPG-KEY-WAZUH
 ```
 
 
 _Add Wazuh repository:_
-
 ```
 cat > /etc/yum.repos.d/wazuh.repo << EOF
 
@@ -245,17 +243,32 @@ EOF
 ```
 
 
-_To install the Wazuh agent:_
+### For Ubuntu Based:
+
+_Install the GPG key:_
+```
+curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | gpg --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/wazuh.gpg --import && chmod 644 /usr/share/keyrings/wazuh.gpg
+```
+
+
+_Add the repository:_
+```
+echo "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt/ stable main" | tee -a /etc/apt/sources.list.d/wazuh.list
+```
+
+
+### To deploy/install the Wazuh agent:
 
 - `WAZUH_MANAGER` variable to contain your Wazuh manager IP address or hostname.
 
+_For CentOS:_
 ```
 WAZUH_MANAGER="192.168.10.192" yum install wazuh-agent
 ```
 
 
 
-_For Ubuntu::_
+_For Ubuntu:_
 ```
 WAZUH_MANAGER="192.168.10.192" apt install wazuh-agent
 ```
