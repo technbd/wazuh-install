@@ -153,6 +153,8 @@ Once the assistant finishes the installation, the output shows the access creden
 
 ```
 systemctl status wazuh-manager
+systemctl status wazuh-dashboard
+systemctl status wazuh-indexer
 ```
 
 
